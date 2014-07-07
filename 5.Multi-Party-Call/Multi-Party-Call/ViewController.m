@@ -14,14 +14,12 @@
 
 #import "ViewController.h"
 #import <OpenTok/OpenTok.h>
-#import "TBExamplePublisher.h"
-#import "TBExampleSubscriber.h"
 
-static NSString *const kApiKey = @"";
+static NSString *const kApiKey = @"100";
 // Replace with your generated session ID
-static NSString *const kSessionId = @"";
+static NSString *const kSessionId = @"1_MX4xMDB-MTI3LjAuMC4xflRodSBNYXIgMDYgMjI6MDg6NDMgUFNUIDIwMTR-MC41MjA3NTUzNX4";
 // Replace with your generated token
-static NSString *const kToken = @"";
+static NSString *const kToken = @"T1==cGFydG5lcl9pZD0xMDAmc2RrX3ZlcnNpb249dGJwaHAtdjAuOTEuMjAxMS0wNy0wNSZzaWc9MzNjZTMxODRkYjI5ZDAyZTAxNjhiNGVmMzljNmE3YWZlZDc0OTUwMDpzZXNzaW9uX2lkPTFfTVg0eE1EQi1NVEkzTGpBdU1DNHhmbFJvZFNCTllYSWdNRFlnTWpJNk1EZzZORE1nVUZOVUlESXdNVFItTUM0MU1qQTNOVFV6Tlg0JmNyZWF0ZV90aW1lPTE0MDQ2NTQwNjAmcm9sZT1tb2RlcmF0b3Imbm9uY2U9MTQwNDY1NDA2MC43ODM2MTgzNTIyNjIzNCZleHBpcmVfdGltZT0xNDA3MjQ2MDYwJmNvbm5lY3Rpb25fZGF0YT1UMSUzRCUzRGNHRnlkRzVsY2w5cFpEMHhNREFtYzJSclgzWmxjbk5wYjI0OWRHSndhSEF0ZGpBdU9URXVNakF4TVMwd055MHdOU1p6YVdjOU9UUmlOemt3WTJOaE5ERTFaV0ZtTmpaak1UVTRNMkk1T0dJM016QXlZMlF3WkdFeE5EVTBOanB6WlhOemFXOXVYMmxrUFRGZlRWZzBlRTFFUWkxTlZFa3pUR3BCZFUxRE5IaG1iRkp2WkZOQ1RsbFlTV2ROUkZsblRXcEpOazFFWnpaT1JFMW5WVVpPVlVsRVNYZE5WRkl0VFVNME1VMXFRVE5PVkZWNlRsZzBKbU55WldGMFpWOTBhVzFsUFRFek9UUTBNak0xTXpBbWNtOXNaVDF0YjJSbGNtRjBiM0ltYm05dVkyVTlNVE01TkRReU16VXpNQzQ0T0RVeU1qVTVNek0wTkRReEptVjRjR2x5WlY5MGFXMWxQVEV6T1Rjd01UVTFNekElM0Q=";
 
 #define APP_IN_FULL_SCREEN @"appInFullScreenMode"
 #define PUBLISHER_BAR_HEIGHT 50.0f
@@ -55,8 +53,8 @@ OTPublisherDelegate>{
 	NSMutableArray *allConnectionsIds;
     
 	OTSession *_session;
-	TBExamplePublisher *_publisher;
-	TBExampleSubscriber *_currentSubscriber;
+	OTPublisher *_publisher;
+	OTSubscriber *_currentSubscriber;
 	CGPoint _startPosition;
     
 	BOOL initialized;
@@ -784,7 +782,7 @@ OTPublisherDelegate>{
     [self resetArrowsStates];
 }
 
-- (void)showAsCurrentSubscriber:(TBExampleSubscriber *)subscriber
+- (void)showAsCurrentSubscriber:(OTSubscriber *)subscriber
 {
     // scroll view tapping bug
     if(subscriber == _currentSubscriber)
@@ -822,7 +820,7 @@ OTPublisherDelegate>{
 - (void)setupPublisher
 {
 	// create one time publisher and style publisher
-	_publisher = [[TBExamplePublisher alloc]
+	_publisher = [[OTPublisher alloc]
                   initWithDelegate:self
                   name:[[UIDevice currentDevice] name]];
     
@@ -883,7 +881,7 @@ OTPublisherDelegate>{
         int currentPage = (int)(videoContainerView.contentOffset.x /
                                 videoContainerView.frame.size.width) ;
         
-        TBExampleSubscriber *nextSubscriber = [allSubscribers objectForKey:
+        OTSubscriber *nextSubscriber = [allSubscribers objectForKey:
                               [allConnectionsIds objectAtIndex:currentPage - 1]];
         
         [self showAsCurrentSubscriber:nextSubscriber];
@@ -897,7 +895,7 @@ OTPublisherDelegate>{
         int currentPage = (int)(videoContainerView.contentOffset.x /
                                 videoContainerView.frame.size.width) ;
         
-        TBExampleSubscriber *nextSubscriber = [allSubscribers objectForKey:
+        OTSubscriber *nextSubscriber = [allSubscribers objectForKey:
                                                [allConnectionsIds objectAtIndex:currentPage + 1]];
         
         [self showAsCurrentSubscriber:nextSubscriber];
@@ -983,7 +981,7 @@ OTPublisherDelegate>{
     // arrange all subscribers horizontally one by one.
 	for (int i = 0; i < [allConnectionsIds count]; i++)
 	{
-		TBExampleSubscriber *subscriber = [allSubscribers
+		OTSubscriber *subscriber = [allSubscribers
                                            valueForKey:[allConnectionsIds
                                                         objectAtIndex:i]];
         subscriber.view.tag = i;
@@ -1008,7 +1006,7 @@ OTPublisherDelegate>{
     // remove all subscriber views from video container
 	for (int i = 0; i < [allConnectionsIds count]; i++)
 	{
-		TBExampleSubscriber *subscriber = [allSubscribers valueForKey:
+		OTSubscriber *subscriber = [allSubscribers valueForKey:
                                            [allConnectionsIds objectAtIndex:i]];
 		[subscriber.view removeFromSuperview];
 	}
@@ -1027,6 +1025,7 @@ OTPublisherDelegate>{
     {
         [self stopArchiveAnimation];
     }
+    [self resetArrowsStates];
 }
 
 - (void)    session:(OTSession *)session
@@ -1035,7 +1034,7 @@ OTPublisherDelegate>{
 	NSLog(@"streamDestroyed %@", stream.connection.connectionId);
 	
     // get subscriber for this stream
-	TBExampleSubscriber *subscriber = [allSubscribers objectForKey:
+	OTSubscriber *subscriber = [allSubscribers objectForKey:
                                        stream.connection.connectionId];
     
 	// remove from superview
@@ -1061,7 +1060,7 @@ OTPublisherDelegate>{
 {
 	
     // create subscriber
-	TBExampleSubscriber *subscriber = [[TBExampleSubscriber alloc]
+	OTSubscriber *subscriber = [[OTSubscriber alloc]
                                        initWithStream:stream delegate:self];
     
 	[allSubscribers setObject:subscriber forKey:stream.connection.connectionId];
