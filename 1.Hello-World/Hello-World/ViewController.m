@@ -9,7 +9,7 @@
 #import <OpenTok/OpenTok.h>
 
 @interface ViewController ()
-<OTSessionDelegate, OTSubscriberKitDelegate, OTPublisherDelegate>
+<OTSessionDelegate, OTSubscriberKitDelegate, OTPublisherDelegate, OTSubscriberKitNetworkStatsDelegate>
 
 @end
 
@@ -31,7 +31,7 @@ static NSString* const kSessionId = @"";
 static NSString* const kToken = @"";
 
 // Change to NO to subscribe to streams other than your own.
-static bool subscribeToSelf = NO;
+static bool subscribeToSelf = YES;
 
 #pragma mark - View lifecycle
 
@@ -44,7 +44,35 @@ static bool subscribeToSelf = NO;
     _session = [[OTSession alloc] initWithApiKey:kApiKey
                                        sessionId:kSessionId
                                         delegate:self];
+    
+    [_session performSelector:@selector(setApiRootURL:) withObject:[NSURL URLWithString:@"https://anvil-dev.opentok.com"]];
+
+    NSLog(@"Started precall network test");
+    [_session testNetworkWithToken:kToken error:nil];
+
+}
+
+- (void)session:(OTSession*)session
+networkTestCompletedWithResult:(OTSessionNetworkStats*)result;
+{
+    NSLog(@"precall uploadBitsPerSecond %f",result.uploadBitsPerSecond);
+    NSLog(@"precall downloadBitsPerSecond %f",result.downloadBitsPerSecond);
+    NSLog(@"precall roundTripTimeMilliseconds %f",result.roundTripTimeMilliseconds);
+    NSLog(@"precall packetLossRatio %f",result.packetLossRatio);
+    NSLog(@"Ended precall network test");
     [self doConnect];
+}
+
+- (void)subscriber:(OTSubscriberKit*)subscriber
+videoNetworkStatsUpdated:(OTSubscriberKitVideoNetworkStats*)stats
+{
+    NSLog(@"videoBytesReceived %llu",stats.videoBytesReceived);
+}
+
+- (void)subscriber:(OTSubscriberKit*)subscriber
+audioNetworkStatsUpdated:(OTSubscriberKitAudioNetworkStats*)stats
+{
+    NSLog(@"audioBytesReceived %llu",stats.audioBytesReceived);
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -122,7 +150,7 @@ static bool subscribeToSelf = NO;
 - (void)doSubscribe:(OTStream*)stream
 {
     _subscriber = [[OTSubscriber alloc] initWithStream:stream delegate:self];
-    
+    _subscriber.networkStatsDelegate = self;
     OTError *error = nil;
     [_session subscribe:_subscriber error:&error];
     if (error)
