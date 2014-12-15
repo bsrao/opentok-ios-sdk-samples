@@ -32,6 +32,7 @@ static NSString* const kToken = @"";
 
 // Change to NO to subscribe to streams other than your own.
 static bool subscribeToSelf = YES;
+NSDate *startDate = nil;
 
 #pragma mark - View lifecycle
 
@@ -48,6 +49,7 @@ static bool subscribeToSelf = YES;
     [_session performSelector:@selector(setApiRootURL:) withObject:[NSURL URLWithString:@"https://anvil-dev.opentok.com"]];
 
     NSLog(@"Started precall network test");
+    startDate = [NSDate date];
     [_session testNetworkWithToken:kToken error:nil];
 
 }
@@ -55,11 +57,12 @@ static bool subscribeToSelf = YES;
 - (void)session:(OTSession*)session
 networkTestCompletedWithResult:(OTSessionNetworkStats*)result;
 {
+    NSTimeInterval timeTook = [[NSDate date] timeIntervalSinceDate:startDate];
     NSLog(@"precall uploadBitsPerSecond %f",result.uploadBitsPerSecond);
     NSLog(@"precall downloadBitsPerSecond %f",result.downloadBitsPerSecond);
     NSLog(@"precall roundTripTimeMilliseconds %f",result.roundTripTimeMilliseconds);
     NSLog(@"precall packetLossRatio %f",result.packetLossRatio);
-    NSLog(@"Ended precall network test");
+    NSLog(@"Ended precall network test, took time %.2f",timeTook);
     [self doConnect];
 }
 
