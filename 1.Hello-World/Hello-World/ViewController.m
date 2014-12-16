@@ -62,20 +62,54 @@ networkTestCompletedWithResult:(OTSessionNetworkStats*)result;
     NSLog(@"precall downloadBitsPerSecond %f",result.downloadBitsPerSecond);
     NSLog(@"precall roundTripTimeMilliseconds %f",result.roundTripTimeMilliseconds);
     NSLog(@"precall packetLossRatio %f",result.packetLossRatio);
-    NSLog(@"Ended precall network test, took time %.2f",timeTook);
+    NSLog(@"Ended precall network test, took time %.2f seconds",timeTook);
     [self doConnect];
 }
 
+double prevVideoTimestamp = 0;
+double prevVideoBytes = 0;
 - (void)subscriber:(OTSubscriberKit*)subscriber
 videoNetworkStatsUpdated:(OTSubscriberKitVideoNetworkStats*)stats
 {
-    NSLog(@"videoBytesReceived %llu",stats.videoBytesReceived);
+     if (prevVideoTimestamp == 0)
+     {
+         prevVideoTimestamp = stats.timestamp;
+         prevVideoBytes = stats.videoBytesReceived;
+     }
+    
+    int timeDelta = 1000; // 1 second
+    if (stats.timestamp - prevVideoTimestamp >= timeDelta)
+    {
+        long bw = 0;
+        bw = (8 * (stats.videoBytesReceived - prevVideoBytes)) / ((stats.timestamp - prevVideoTimestamp) / 1000ull);
+
+        NSLog(@"videoBytesReceived %llu, bps %ld",stats.videoBytesReceived, bw);
+        prevVideoTimestamp = stats.timestamp;
+        prevVideoBytes = stats.videoBytesReceived;
+    }
 }
 
+double prevAudioTimestamp = 0;
+double prevAudioBytes = 0;
 - (void)subscriber:(OTSubscriberKit*)subscriber
 audioNetworkStatsUpdated:(OTSubscriberKitAudioNetworkStats*)stats
 {
-    NSLog(@"audioBytesReceived %llu",stats.audioBytesReceived);
+    if (prevAudioTimestamp == 0)
+    {
+        prevAudioTimestamp = stats.timestamp;
+        prevAudioBytes = stats.audioBytesReceived;
+    }
+    
+    int timeDelta = 1000; // 1 second
+    if (stats.timestamp - prevAudioTimestamp >= timeDelta)
+    {
+        long bw = 0;
+        bw = (8 * (stats.audioBytesReceived - prevAudioBytes)) / ((stats.timestamp - prevAudioTimestamp) / 1000ull);
+        
+        NSLog(@"audioBytesReceived %llu, bps %ld",stats.audioBytesReceived, bw);
+        prevAudioTimestamp = stats.timestamp;
+        prevAudioBytes = stats.audioBytesReceived;
+    }
 }
 
 - (BOOL)prefersStatusBarHidden
