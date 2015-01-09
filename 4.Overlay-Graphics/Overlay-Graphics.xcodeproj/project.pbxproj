@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A51C860619B6F22B0067184D /* highCongestion.svg in Resources */ = {isa = PBXBuildFile; fileRef = A51C860419B6F22B0067184D /* highCongestion.svg */; };
-		A51C860719B6F22B0067184D /* midCongestion.svg in Resources */ = {isa = PBXBuildFile; fileRef = A51C860519B6F22B0067184D /* midCongestion.svg */; };
 		A535047718FD469B00E68BD9 /* archiving_off-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = A535047118FD469B00E68BD9 /* archiving_off-Small.png */; };
 		A535047818FD469B00E68BD9 /* archiving_off-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A535047218FD469B00E68BD9 /* archiving_off-Small@2x.png */; };
 		A535047918FD469B00E68BD9 /* archiving_on-10.png in Resources */ = {isa = PBXBuildFile; fileRef = A535047318FD469B00E68BD9 /* archiving_on-10.png */; };
@@ -78,8 +76,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		A51C860419B6F22B0067184D /* highCongestion.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = highCongestion.svg; sourceTree = "<group>"; };
-		A51C860519B6F22B0067184D /* midCongestion.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = midCongestion.svg; sourceTree = "<group>"; };
 		A535047118FD469B00E68BD9 /* archiving_off-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "archiving_off-Small.png"; sourceTree = "<group>"; };
 		A535047218FD469B00E68BD9 /* archiving_off-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "archiving_off-Small@2x.png"; sourceTree = "<group>"; };
 		A535047318FD469B00E68BD9 /* archiving_on-10.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "archiving_on-10.png"; sourceTree = "<group>"; };
@@ -273,8 +269,6 @@
 				A5595ED219CAD5810040B99C /* silhouette.png */,
 				A5595EBC19C9512A0040B99C /* Headset.png */,
 				A5595EBD19C9512A0040B99C /* Headset@2x.png */,
-				A51C860419B6F22B0067184D /* highCongestion.svg */,
-				A51C860519B6F22B0067184D /* midCongestion.svg */,
 				A535047118FD469B00E68BD9 /* archiving_off-Small.png */,
 				A535047218FD469B00E68BD9 /* archiving_off-Small@2x.png */,
 				A535047318FD469B00E68BD9 /* archiving_on-10.png */,
@@ -415,8 +409,6 @@
 				A56B2BC518C085AD001E082A /* Images.xcassets in Resources */,
 				A5FA8EED1A5DE18A002DC195 /* unmutePublisher.png in Resources */,
 				A5FA8EE91A5DE18A002DC195 /* midCongestion.png in Resources */,
-				A51C860619B6F22B0067184D /* highCongestion.svg in Resources */,
-				A51C860719B6F22B0067184D /* midCongestion.svg in Resources */,
 				A5FA8EE61A5DE18A002DC195 /* audioOnlyActive.png in Resources */,
 				A56B2BBD18C085AD001E082A /* Main_iPhone.storyboard in Resources */,
 				A5595EBE19C9512A0040B99C /* Headset.png in Resources */,
