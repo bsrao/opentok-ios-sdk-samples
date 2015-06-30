@@ -60,7 +60,7 @@ extern UITextField *my_pub_dimensions ;
     self = [super init];
     if (self) {
 
-        NSString *yuvFileName = @"1280_720_HIGH.yuv";
+        NSString *yuvFileName = @"640_480_HIGH.jpeg";
         // 352_288_HIGH.yuv 640_480_HIGH.yuv 1280_720_HIGH.yuv
         _captureWidth = 0;
         _captureHeight = 0;
@@ -150,7 +150,7 @@ extern UITextField *my_pub_dimensions ;
     _capturing = YES;
     _picCount = 0;
     _currentLoopNum = 1;
-    self.loopCount = 10;
+    self.loopCount = 5;
     _markedAsFinished = false;
     double secondsToFire = 1.000f / OT_VIDEO_CAPTURE_IOS_DEFAULT_INITIAL_FRAMERATE; // 1.000f;
     
@@ -235,7 +235,7 @@ dispatch_source_t CreateDispatchTimer(double interval, dispatch_queue_t queue, d
     dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
     if (timer)
     {
-        dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, interval * NSEC_PER_SEC), interval * NSEC_PER_SEC, (1ull * NSEC_PER_SEC) / 10);
+        dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, interval * NSEC_PER_SEC), interval * NSEC_PER_SEC, (1ull * NSEC_PER_SEC));
         dispatch_source_set_event_handler(timer, block);
         dispatch_resume(timer);
     }
